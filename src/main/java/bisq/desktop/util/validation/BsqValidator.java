@@ -43,7 +43,7 @@ public class BsqValidator extends AltcoinValidator {
     private Coin maxValue;
     @Nullable
     private Coin availableBalance;
-    private Coin minValue = Coin.valueOf(546); // dust
+    private Coin minValue = Coin.valueOf(1);
 
     @Override
     protected double getMinValue() {
@@ -83,7 +83,7 @@ public class BsqValidator extends AltcoinValidator {
                     .and(validateIfNotFractionalBtcValue(input))
                     .and(validateIfNotExceedsMaxBtcValue(input))
                     .and(validateIfSufficientAvailableBalance(input))
-                    .and(validateIfAboveDust(input))
+                    /* .and(validateIfAboveDust(input))*/ //TODO
                     .and(validateIfNotBelowMinValue(input));
         }
 

@@ -43,11 +43,13 @@ import bisq.core.btc.wallet.TxBroadcaster;
 import bisq.core.btc.wallet.TxMalleabilityException;
 import bisq.core.btc.wallet.WalletsManager;
 import bisq.core.btc.wallet.WalletsSetup;
+import bisq.core.dao.node.validation.OpReturnProcessor;
 import bisq.core.locale.Res;
 import bisq.core.util.CoinUtil;
 
 import bisq.network.p2p.P2PService;
 
+import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.Transaction;
@@ -76,6 +78,7 @@ public class BsqSendView extends ActivatableView<GridPane, Void> implements BsqB
     private final BsqBalanceUtil bsqBalanceUtil;
     private final BsqValidator bsqValidator;
     private final BsqAddressValidator bsqAddressValidator;
+    private final OpReturnProcessor opReturnProcessor;
 
     private int gridRow = 0;
     private InputTextField amountInputTextField;
@@ -99,7 +102,8 @@ public class BsqSendView extends ActivatableView<GridPane, Void> implements BsqB
                         Navigation navigation,
                         BsqBalanceUtil bsqBalanceUtil,
                         BsqValidator bsqValidator,
-                        BsqAddressValidator bsqAddressValidator) {
+                        BsqAddressValidator bsqAddressValidator,
+                        OpReturnProcessor opReturnProcessor) {
         this.bsqWalletService = bsqWalletService;
         this.btcWalletService = btcWalletService;
         this.walletsManager = walletsManager;
@@ -111,6 +115,7 @@ public class BsqSendView extends ActivatableView<GridPane, Void> implements BsqB
         this.bsqBalanceUtil = bsqBalanceUtil;
         this.bsqValidator = bsqValidator;
         this.bsqAddressValidator = bsqAddressValidator;
+        this.opReturnProcessor = opReturnProcessor;
     }
 
     @Override
@@ -142,8 +147,21 @@ public class BsqSendView extends ActivatableView<GridPane, Void> implements BsqB
                 String receiversAddressString = bsqFormatter.getAddressFromBsqAddress(receiversAddressInputTextField.getText()).toString();
                 Coin receiverAmount = bsqFormatter.parseToCoin(amountInputTextField.getText());
                 try {
-                    Transaction preparedSendTx = bsqWalletService.getPreparedSendTx(receiversAddressString, receiverAmount);
-                    Transaction txWithBtcFee = btcWalletService.completePreparedSendBsqTx(preparedSendTx, true);
+                    Address btcWalletChangeAddress = btcWalletService.getFreshAddressEntry().getAddress();
+                    Transaction preparedSendTx = bsqWalletService.getPreparedSendTx(receiversAddressString,
+                            receiverAmount, btcWalletChangeAddress);
+
+                    byte[] opReturnDataForPadding;
+                    Coin outputValue = preparedSendTx.getOutput(0).getValue();
+                    if (outputValue.compareTo(receiverAmount) > 0) {
+                        int padding = (int) outputValue.subtract(receiverAmount).value;
+                        opReturnDataForPadding = opReturnProcessor.getOpReturnDataForSinglePadding(0, padding);
+                    } else {
+                        opReturnDataForPadding = null;
+                    }
+
+                    Transaction txWithBtcFee = btcWalletService.completePreparedSendBsqTx(preparedSendTx, opReturnDataForPadding);
+
                     Transaction signedTx = bsqWalletService.signTx(txWithBtcFee);
                     Coin miningFee = signedTx.getFee();
                     int txSize = signedTx.bitcoinSerialize().length;

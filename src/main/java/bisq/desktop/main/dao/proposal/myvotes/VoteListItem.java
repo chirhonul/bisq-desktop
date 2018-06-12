@@ -26,7 +26,6 @@ import bisq.core.dao.DaoFacade;
 import bisq.core.dao.state.BlockListener;
 import bisq.core.dao.state.blockchain.Block;
 import bisq.core.dao.state.blockchain.Tx;
-import bisq.core.dao.state.blockchain.TxOutput;
 import bisq.core.dao.voting.myvote.MyVote;
 import bisq.core.locale.Res;
 
@@ -150,7 +149,7 @@ public class VoteListItem implements BlockListener {
             stake = daoFacade.getUnspentBlindVoteStakeTxOutputs().stream()
                     .filter(txOutput -> txOutput.getTxId().equals(txId))
                     .filter(txOutput -> txOutput.getIndex() == 0)
-                    .mapToLong(TxOutput::getValue)
+                    .mapToLong(bsqWalletService::getTxOutputValue)
                     .sum();
             stakeAsStringProperty.set(bsqFormatter.formatCoin(Coin.valueOf(stake)));
         }
