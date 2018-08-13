@@ -173,6 +173,7 @@ public class MainView extends InitializableView<StackPane, MainViewModel> {
         ToggleButton disputesButton = new NavButton(DisputesView.class, Res.get("mainView.menu.support"));
         ToggleButton settingsButton = new NavButton(SettingsView.class, Res.get("mainView.menu.settings"));
         ToggleButton accountButton = new NavButton(AccountView.class, Res.get("mainView.menu.account"));
+        // todo(chirhonul): may want to gray out / disable the dao button until we've found the genesis tx and validated everything.
         ToggleButton daoButton = new NavButton(DaoView.class, Res.get("mainView.menu.dao"));
         Pane portfolioButtonHolder = new Pane(portfolioButton);
         Pane disputesButtonHolder = new Pane(disputesButton);
