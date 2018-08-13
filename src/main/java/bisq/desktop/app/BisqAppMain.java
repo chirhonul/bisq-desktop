@@ -45,6 +45,7 @@ public class BisqAppMain extends BisqExecutable {
     private BisqGrpcServer bisqGrpcServer;
     */
     public static void main(String[] args) throws Exception {
+        System.out.println("FIXME: BisqAppMain.main()"); // this is the entrypoint for gui
         if (BisqExecutable.setupInitialOptionParser(args)) {
             // For some reason the JavaFX launch process results in us losing the thread context class loader: reset it.
             // In order to work around a bug in JavaFX 8u25 and below, you must include the following code as the first line of your realMain method:
@@ -68,6 +69,7 @@ public class BisqAppMain extends BisqExecutable {
     @Override
     protected void launchApplication() {
         BisqApp.setAppLaunchedHandler(application -> {
+            System.out.println("FIXME: BisqApp's appLaunchedHandler");
             BisqAppMain.this.application = (BisqApp) application;
 
             // Necessary to do the setup at this point to prevent Bouncy Castle errors
