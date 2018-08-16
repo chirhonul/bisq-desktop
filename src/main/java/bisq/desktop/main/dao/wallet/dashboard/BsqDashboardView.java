@@ -98,6 +98,8 @@ public class BsqDashboardView extends ActivatableView<GridPane, Void> implements
 
         addTitledGroupBg(root, ++gridRow, 14, Res.get("dao.wallet.dashboard.statistics"), Layout.GROUP_DISTANCE);
 
+        // todo(chirhonul): this entire dashboard for the DAO should be disabled / greyed out until we have validated
+        // that the genesis tx exists (and all other invariants hold).
         addLabelTextField(root, gridRow, Res.get("dao.wallet.dashboard.genesisBlockHeight"),
                 String.valueOf(daoFacade.getGenesisBlockHeight()), Layout.FIRST_ROW_AND_GROUP_DISTANCE);
 

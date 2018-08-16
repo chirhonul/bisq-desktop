@@ -457,6 +457,7 @@ public class MainView extends InitializableView<StackPane, MainViewModel> {
 
         // createBitcoinInfoBox
         btcSplashInfo = new AutoTooltipLabel();
+        // todo(chirhonul): seems like there is a bug here when using regtest; spinner never disappears, but disappears when mining a block.
         btcSplashInfo.textProperty().bind(model.getBtcInfo());
         walletServiceErrorMsgListener = (ov, oldValue, newValue) -> {
             btcSplashInfo.setId("splash-error-state-msg");

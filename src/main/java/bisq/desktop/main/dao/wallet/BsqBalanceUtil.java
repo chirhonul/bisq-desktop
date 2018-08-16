@@ -125,6 +125,7 @@ public class BsqBalanceUtil implements BsqBalanceListener {
                                  Coin lockedForVotingBalance,
                                  Coin lockupBondsBalance,
                                  Coin unlockingBondsBalance) {
+        System.out.println("FIXME: now have this much BSQ: " + availableBalance);
         availableBalanceTextField.setText(bsqFormatter.formatCoinWithCode(availableBalance));
         availableNonBsqBalanceTextField.setText(bsqFormatter.formatBtcSatoshi(availableNonBsqBalance.value));
         unverifiedBalanceTextField.setText(bsqFormatter.formatCoinWithCode(unverifiedBalance));
