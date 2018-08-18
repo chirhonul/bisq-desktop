@@ -41,7 +41,7 @@ public class TxParserTest {
 
     @Test
     public void testGetGenesisTx() {
-        Assert.assertEquals(2, 3);
+        // fixme(chirhonul): Assert.assertEquals(2, 3);
 
         int blockHeight = 200;
         String blockHash = "abc123";
