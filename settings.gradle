@@ -1,2 +1,11 @@
-rootProject.name = 'bisq-desktop'
-include 'common', 'p2p', 'core'
+include 'assets'
+include 'common'
+include 'p2p'
+include 'core'
+include 'desktop'
+
+rootProject.name = 'bisq'
+
+//rootProject.children.each { project ->
+//    project.name = "${rootProject.name}-${project.name}"
+//}
